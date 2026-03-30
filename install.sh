@@ -34,7 +34,7 @@ if [ -z "$MANIFEST" ]; then
 fi
 
 # Extract the appdmg_osx filename (contains the hash)
-FILE=$(echo "$MANIFEST" | grep -A5 '"appdmg_osx"' | grep '"file"' | grep -v steamchina | awk -F'"' '{print $4}')
+FILE=$(echo "$MANIFEST" | grep -A15 '"appdmg_osx"' | grep '"file"' | grep -v steamchina | awk -F'"' '{print $4}' | head -n 1)
 if [ -z "$FILE" ]; then
   echo -e "${RED}Error: Could not parse manifest. Valve may have changed their CDN format.${NC}"
   exit 1
