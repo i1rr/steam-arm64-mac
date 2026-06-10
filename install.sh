@@ -51,7 +51,7 @@ unzip -q "$TMP_DIR/appdmg_osx.zip" -d "$TMP_DIR"
 tar xzf "$TMP_DIR/SteamMacBootstrapper.tar.gz" -C "$TMP_DIR"
 
 echo -e "${YELLOW}Step 4/5: Verifying ARM64 support...${NC}"
-ARCHS=$(lipo -info "$TMP_DIR/Steam.app/Contents/MacOS/steam_osx" 2>&1)
+ARCHS=$(file "$TMP_DIR/Steam.app/Contents/MacOS/steam_osx")
 if ! echo "$ARCHS" | grep -q "arm64"; then
   echo -e "${RED}Error: Downloaded binary does not contain arm64 slice. Aborting.${NC}"
   rm -rf "$TMP_DIR"
