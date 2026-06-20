@@ -30,13 +30,15 @@ curl -fsSL https://raw.githubusercontent.com/i1rr/steam-arm64-mac/main/install.s
 Or if you prefer to inspect the script first (recommended):
 
 ```bash
-# Download
+# Download (in Downloads folder)
+cd ~/Downloads
 curl -fsSL https://raw.githubusercontent.com/i1rr/steam-arm64-mac/main/install.sh -o install.sh
 
 # Read it
 cat install.sh
 
 # Run it
+chmod +x install.sh
 bash install.sh
 ```
 
