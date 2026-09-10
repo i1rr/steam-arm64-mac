@@ -45,10 +45,10 @@ bash install.sh
 1. **Checks** you're on Apple Silicon and Steam is not running
 2. **Reads** Valve's CDN manifest (`client-update.steamstatic.com/steam_client_osx`) to get the latest bootstrapper URL — this is the same manifest Steam reads when updating itself
 3. **Downloads** the universal bootstrapper package directly from Valve's CDN
-4. **Verifies** the downloaded binary actually contains an ARM64 slice before touching anything
-5. **Replaces** `/Applications/Steam.app` with the universal version
-6. **Opts into** the Steam beta channel (where the full native ARM64 client lives) by writing to `~/Library/Application Support/Steam/package/beta`
-7. **Verifies** Valve's code signature (Team ID: `MXGJJ98X76`)
+4. **Verifies** the downloaded package's SHA-256 checksum, ARM64 support, Valve signature, and Gatekeeper notarization before touching your installed copy
+5. **Removes** AppleDouble metadata artifacts shipped in Valve's tarball; otherwise they invalidate the app signature and macOS reports Steam as damaged
+6. **Replaces** `/Applications/Steam.app` with the universal version, restoring the previous copy if the installation itself fails
+7. **Opts into** the Steam beta channel (where the full native ARM64 client lives) by writing to `~/Library/Application Support/Steam/package/beta`
 
 ## Is this safe?
 
@@ -59,6 +59,7 @@ Yes. The script only uses Valve's own infrastructure — no third-party mirrors,
 - **The CDN:** `client-update.steamstatic.com` is Valve's official update server — the same one the Steam client has always used internally to update itself
 - **The manifest:** `steam_client_osx` is a public plaintext file listing every package Steam can download, along with SHA1 hashes embedded in each filename. If a file were tampered with, its hash wouldn't match
 - **The signature:** After installation, the script checks Valve's Apple Developer Team ID (`MXGJJ98X76`). This is a company-wide identifier issued by Apple to Valve — not specific to your machine, not specific to this script. Every legitimate Steam binary ever signed by Valve carries it. You can check it manually:
+
   ```bash
   codesign -dv /Applications/Steam.app 2>&1 | grep TeamIdentifier
   # Expected: TeamIdentifier=MXGJJ98X76
